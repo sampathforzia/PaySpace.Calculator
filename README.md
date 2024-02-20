@@ -57,3 +57,8 @@ You have been briefed to complete a tax calculator for an individual. The applic
 * Store the calculated value to SQL Server with date/time and the two fields entered
 * Security is not required but feel free to show off
 * Server side should be REST API’s
+
+** How to setup Database **
+* Find appsetttings.json in the PaySpace.Calculator.API project
+* Inside the ConnectionStrings section you can find "CalDB" and change Server, User ID,Password
+   
