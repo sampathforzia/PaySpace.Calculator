@@ -19,7 +19,7 @@ namespace PaySpace.Calculator.Services.Calculators
         public CalculateResult Calculate(decimal income)
         {
             var _calSettings = _calculatorSettingsService.GetSettingsAsync( CalculatorType.Progressive);
-            decimal roundIncome = Math.Floor(income);
+            decimal roundIncome =  (income);
             var _settings = _calSettings.Result.Where(x => ((x.From <= roundIncome))).ToList();
             decimal dc = 0;
             decimal calIncome = income;
