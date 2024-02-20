@@ -34,11 +34,11 @@ namespace PaySpace.Calculator.Services.Calculators
                     {
                         if (_setting.RateType == RateType.Amount)
                         {
-                            dc = dc + (income * _setting.Rate);
+                            dc = dc + (calIncome * _setting.Rate);
                         }
                         else if (_setting.RateType == RateType.Percentage)
                         {
-                            dc = dc + (income * (_setting.Rate / 100));
+                            dc = dc + (calIncome * (_setting.Rate / 100));
                         }                                               
                     }
                 }
@@ -49,11 +49,11 @@ namespace PaySpace.Calculator.Services.Calculators
                     {
                         if (_setting.RateType == RateType.Amount)
                         {
-                            dc = dc + (income * _setting.Rate);
+                            dc = dc + (calIncome * _setting.Rate);
                         }
                         else if (_setting.RateType == RateType.Percentage)
                         {
-                            dc = dc + (income * (_setting.Rate / 100));
+                            dc = dc + (calIncome * (_setting.Rate / 100));
                         }
                     }
                 }

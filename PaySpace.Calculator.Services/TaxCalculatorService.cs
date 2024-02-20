@@ -85,8 +85,7 @@ namespace PaySpace.Calculator.Services
                     ICalculator cal;
                     if (type == CalculatorType.Progressive)
                     {
-                        cal = new ProgressiveCalculator(_calculatorSettingService);
-                
+                        cal = new ProgressiveCalculator(_calculatorSettingService);                
                     }
                     else if (type == CalculatorType.FlatRate)
                     {
@@ -101,9 +100,8 @@ namespace PaySpace.Calculator.Services
                         cal = new UnknowCalculator( );
                     }
            
-            result = cal.Calculate(income);
-                    return result;
-                
+                    result = cal.Calculate(income);
+                    return result;                
         }
 
        
