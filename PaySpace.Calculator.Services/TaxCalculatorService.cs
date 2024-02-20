@@ -42,7 +42,7 @@ namespace PaySpace.Calculator.Services
         /// <returns>return caculation result which is contact tax and type of caculator</returns>
         /// <exception cref="CalculatorException"></exception>
         public async Task<CalculateResult> TaxCalcuation(string? postalCode, decimal income) {
-            decimal roundIncome = Math.Floor(income);
+            decimal roundIncome =  (income);
             
             if (postalCode == null) {
                 throw new CalculatorException("Invalid postal code");
