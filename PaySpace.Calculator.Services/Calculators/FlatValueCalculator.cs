@@ -18,22 +18,22 @@ namespace PaySpace.Calculator.Services.Calculators
         }
         public CalculateResult Calculate(decimal income)
         {
-            decimal dc = 0;
+            decimal totalTax = 0;
             var _calSettings = _calculatorSettingsService.GetSettingsAsync(CalculatorType.FlatValue);
             var _setting = _calSettings.Result.Where(x => x.From <= income && (x.To.HasValue == true ? x.To : 0) >= income).FirstOrDefault();
 
             if (_setting != null)
             {
-                dc = income * (_setting.Rate / 100);
+                totalTax = income * (_setting.Rate / 100);
             }
 
             _setting = _calSettings.Result.Where(x => x.From <= income && (x.To.HasValue == true ? x.To : 0) == 0).FirstOrDefault();
             if (_setting != null)
             {
-                dc =_setting.Rate;
+                totalTax =_setting.Rate;
             }
 
-            return (new CalculateResult() { Calculator = CalculatorType.FlatValue, Tax = dc });
+            return (new CalculateResult() { Calculator = CalculatorType.FlatValue, Tax = totalTax });
         }
     }
 }

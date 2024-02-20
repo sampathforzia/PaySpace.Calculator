@@ -23,9 +23,9 @@ namespace PaySpace.Calculator.Services.Calculators
             var _setting = _calSettings.Result.FirstOrDefault();
             if (_setting != null)
             {
-                decimal dc = 0;
-                dc =  (income * (_setting.Rate / 100));
-                return (new CalculateResult() { Calculator = CalculatorType.FlatRate, Tax = dc });
+                decimal totalTax = 0;
+                totalTax =  (income * (_setting.Rate / 100));
+                return (new CalculateResult() { Calculator = CalculatorType.FlatRate, Tax = totalTax });
             }
             else {
                 return (new CalculateResult() { Calculator = CalculatorType.FlatRate, Tax = 0 });

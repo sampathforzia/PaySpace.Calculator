@@ -21,7 +21,7 @@ namespace PaySpace.Calculator.Services.Calculators
             var _calSettings = _calculatorSettingsService.GetSettingsAsync( CalculatorType.Progressive);
             decimal roundIncome =  (income);
             var _settings = _calSettings.Result.Where(x => ((x.From <= roundIncome))).ToList();
-            decimal dc = 0;
+            decimal totalTax = 0;
             decimal calIncome = income;
             int index = 0;
             foreach (var settings in _settings)
@@ -34,11 +34,11 @@ namespace PaySpace.Calculator.Services.Calculators
                     {
                         if (_setting.RateType == RateType.Amount)
                         {
-                            dc = dc + (calIncome * _setting.Rate);
+                            totalTax = totalTax + (calIncome * _setting.Rate);
                         }
                         else if (_setting.RateType == RateType.Percentage)
                         {
-                            dc = dc + (calIncome * (_setting.Rate / 100));
+                            totalTax = totalTax + (calIncome * (_setting.Rate / 100));
                         }                                               
                     }
                 }
@@ -49,18 +49,18 @@ namespace PaySpace.Calculator.Services.Calculators
                     {
                         if (_setting.RateType == RateType.Amount)
                         {
-                            dc = dc + (calIncome * _setting.Rate);
+                            totalTax = totalTax + (calIncome * _setting.Rate);
                         }
                         else if (_setting.RateType == RateType.Percentage)
                         {
-                            dc = dc + (calIncome * (_setting.Rate / 100));
+                            totalTax = totalTax + (calIncome * (_setting.Rate / 100));
                         }
                     }
                 }
                 index = index + 1;
             }                      
           
-            return (new CalculateResult() { Calculator = CalculatorType.Progressive, Tax = dc });
+            return (new CalculateResult() { Calculator = CalculatorType.Progressive, Tax = totalTax });
         }
     }
 }
