@@ -11,7 +11,7 @@ namespace PaySpace.Calculator.Data
         public static void AddDataServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<CalculatorContext>(opt =>
-                opt.UseSqlServer(configuration.GetConnectionString("CalDB")));
+                opt.UseSqlite(configuration.GetConnectionString("CalDB")));
         }
 
         public static void InitializeDatabase(this IApplicationBuilder app)

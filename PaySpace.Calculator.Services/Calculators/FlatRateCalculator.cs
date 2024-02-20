@@ -6,30 +6,31 @@ namespace PaySpace.Calculator.Services.Calculators
 {
     internal sealed class FlatRateCalculator : ICalculator
     {
-        public RateType Type { get; set; }
-
-        public decimal Rate { get; set; }
+        
+        private readonly ICalculatorSettingsService _calculatorSettingsService = null;
+        public FlatRateCalculator(ICalculatorSettingsService calculatorSettingsService)
+        {
+            _calculatorSettingsService = calculatorSettingsService;
+        }
         public FlatRateCalculator()
         {
-            Type = RateType.Percentage;
-            Rate = 0;
+           
         }
-        public FlatRateCalculator(RateType type, decimal rate)
-        {
-            Type = type;
-            Rate = rate;
-        }
+        
         public CalculateResult Calculate(decimal income)
         {
-            decimal dc = 0;
-            if (Type == RateType.Amount)
+            var _calSettings = _calculatorSettingsService.GetSettingsAsync(CalculatorType.FlatRate);
+            var _setting = _calSettings.Result.FirstOrDefault();
+            if (_setting != null)
             {
-                dc = income * Rate;
+                decimal dc = 0;
+                dc =  (income * (_setting.Rate / 100));
+                return (new CalculateResult() { Calculator = CalculatorType.FlatRate, Tax = dc });
             }
-            else if (Type == RateType.Percentage) { 
-            dc = income * (Rate/100);
+            else {
+                return (new CalculateResult() { Calculator = CalculatorType.FlatRate, Tax = 0 });
             }
-            return  (new CalculateResult() { Calculator =  CalculatorType.FlatRate, Tax = dc });
+          
         }
 
     

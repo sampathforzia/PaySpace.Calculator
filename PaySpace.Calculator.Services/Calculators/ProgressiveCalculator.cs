@@ -5,31 +5,61 @@ using PaySpace.Calculator.Services.Models;
 namespace PaySpace.Calculator.Services.Calculators
 {
     internal sealed class ProgressiveCalculator : ICalculator
-    {
-        public RateType Type { get; set; }
-
-        public decimal Rate { get; set; }
-
-        public ProgressiveCalculator(RateType type, decimal rate) { 
-         Type= type;
-            Rate= rate;
-        }
-        public ProgressiveCalculator()
+    {         
+        private readonly ICalculatorSettingsService _calculatorSettingsService=null;
+        public ProgressiveCalculator(ICalculatorSettingsService calculatorSettingsService)
         {
-            Type =  RateType.Percentage;
-            Rate = 0;
+            _calculatorSettingsService = calculatorSettingsService;
         }
+
+        public ProgressiveCalculator() { 
+         
+         
+        }      
         public CalculateResult Calculate(decimal income)
         {
+            var _calSettings = _calculatorSettingsService.GetSettingsAsync( CalculatorType.Progressive);
+            decimal roundIncome = Math.Floor(income);
+            var _settings = _calSettings.Result.Where(x => ((x.From <= roundIncome))).ToList();
             decimal dc = 0;
-            if (Type == RateType.Amount)
+            decimal calIncome = income;
+            int index = 0;
+            foreach (var settings in _settings)
             {
-                dc = income * Rate;
-            }
-            else if (Type == RateType.Percentage)
-            {
-                dc = income * (Rate / 100);
-            }
+                var _setting = settings;
+                if (index == _settings.Count - 1)
+                {
+                    calIncome = (decimal)(income - settings.From);
+                    if (_setting != null)
+                    {
+                        if (_setting.RateType == RateType.Amount)
+                        {
+                            dc = dc + (income * _setting.Rate);
+                        }
+                        else if (_setting.RateType == RateType.Percentage)
+                        {
+                            dc = dc + (income * (_setting.Rate / 100));
+                        }                                               
+                    }
+                }
+                else
+                {
+                    calIncome = (decimal)(settings.To == null ? 0 : settings.To) - settings.From;
+                    if (_setting != null)
+                    {
+                        if (_setting.RateType == RateType.Amount)
+                        {
+                            dc = dc + (income * _setting.Rate);
+                        }
+                        else if (_setting.RateType == RateType.Percentage)
+                        {
+                            dc = dc + (income * (_setting.Rate / 100));
+                        }
+                    }
+                }
+                index = index + 1;
+            }                      
+          
             return (new CalculateResult() { Calculator = CalculatorType.Progressive, Tax = dc });
         }
     }

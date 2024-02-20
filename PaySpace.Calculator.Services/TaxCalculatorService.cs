@@ -43,6 +43,7 @@ namespace PaySpace.Calculator.Services
         /// <exception cref="CalculatorException"></exception>
         public async Task<CalculateResult> TaxCalcuation(string? postalCode, decimal income) {
             decimal roundIncome = Math.Floor(income);
+            
             if (postalCode == null) {
                 throw new CalculatorException("Invalid postal code");
             }
@@ -52,27 +53,20 @@ namespace PaySpace.Calculator.Services
                 throw new CalculatorException("Invalid postal code");
             }          
             var _calSettings = _calculatorSettingService.GetSettingsAsync(_postal.Value);
-            if (_calSettings.IsFaulted==false)
-            {
-                var _setting = _calSettings.Result.Where(x => ((x.From <= roundIncome && x.To >= roundIncome) 
-                || (x.From <= roundIncome && x.To==0)) ).FirstOrDefault();
-                if (_setting != null)
+            if (_calSettings.IsFaulted==false)           {
+                                
+
+                var result = Calculate(  _postal.Value, roundIncome);
+
+                await _historyService.AddAsync(new CalculatorHistory
                 {
-                    var result= Calculate(_setting, _postal.Value, income);
-                    if (result.Calculator != CalculatorType.None) {
-                        await _historyService.AddAsync(new CalculatorHistory
-                        {
-                            Tax = result.Tax,
-                            Calculator = result.Calculator,
-                            PostalCode = postalCode,
-                            Income = income,
-                        });
-                    }
-                    return result;
-                }
-                else {
-                    throw new CalculatorException("Unable to find calculator");
-                }                   
+                    Tax = result.Tax,
+                    Calculator = _postal.Value,
+                    PostalCode = postalCode,
+                    Income = income,
+                });
+                return new CalculateResult() { Tax = result.Tax, Calculator = _postal.Value };
+
             }
             else
             {
@@ -86,24 +80,25 @@ namespace PaySpace.Calculator.Services
         /// <param name="type"></param>
         /// <param name="income"></param>
         /// <returns></returns>
-        private CalculateResult Calculate(CalculatorSetting _setting, CalculatorType type, decimal income) {
+        private CalculateResult Calculate(  CalculatorType type, decimal income) {
             CalculateResult result;                    
                     ICalculator cal;
                     if (type == CalculatorType.Progressive)
                     {
-                        cal = new ProgressiveCalculator(_setting.RateType, _setting.Rate);
+                        cal = new ProgressiveCalculator(_calculatorSettingService);
+                
                     }
                     else if (type == CalculatorType.FlatRate)
                     {
-                        cal = new FlatRateCalculator(_setting.RateType, _setting.Rate);
+                        cal = new FlatRateCalculator(_calculatorSettingService);
                     }
                     else if (type == CalculatorType.FlatValue)
                     {
-                        cal = new FlatValueCalculator(_setting.RateType, _setting.Rate);
+                        cal = new FlatValueCalculator(_calculatorSettingService);
                     }
                     else
                     {
-                        cal = new UnknowCalculator();
+                        cal = new UnknowCalculator( );
                     }
            
             result = cal.Calculate(income);

@@ -10,8 +10,8 @@ namespace PaySpace.Calculator.Services.Abstractions
 {
     internal interface ICalculator
     {
-        public RateType Type { get; }
-        public decimal Rate { get; }
+      //  public RateType Type { get; }
+       // public decimal Rate { get; }
         CalculateResult Calculate(decimal income);         
     }
 }

@@ -10,7 +10,7 @@ namespace PaySpace.Calculator.Data
         //public DbSet<PostalCode> PostalCode { get; set; }
         //public DbSet<CalculatorSetting> CalculatorSetting { get; set; }
 
-        //public DbSet<CalculatorHistory> CalculatorHistory { get; set; }
+         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
